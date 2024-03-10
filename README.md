@@ -6,6 +6,7 @@ ABOUT THE BUSINESS : Fitness business is about.........
 PURPOSES: ..... The system with these features...[list them]... will serve the business as mentioned above.
 
 NOTE:
+
 (1) Design a database that can support at least 2 branches.
 
 (2) At this point, you don’t have to worry about authentication/authorization. (don’t worry about user login/privileges)
