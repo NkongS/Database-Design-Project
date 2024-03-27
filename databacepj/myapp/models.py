@@ -10,7 +10,7 @@ class Locations(models.Model):
     postal_code = models.CharField(max_length=12, blank=True, null=True)
     country_name = models.CharField(max_length=25)
 
-class EPosition(models.Model):
+class Employee_Position(models.Model):
     position_ID = models.CharField(primary_key=True, max_length=10)
     position_name = models.CharField(max_length=30)
     min_salary = models.IntegerField()
@@ -18,7 +18,7 @@ class EPosition(models.Model):
 
 class Employees(models.Model):
     employee_ID = models.CharField(primary_key=True, max_length=10)
-    position_ID = models.ForeignKey(EPosition, on_delete=models.CASCADE)
+    position_ID = models.ForeignKey(Employee_Position, on_delete=models.CASCADE)
     branch_ID = models.ForeignKey('Branches', on_delete=models.CASCADE)
     first_name = models.CharField(max_length=30)
     last_name = models.CharField(max_length=30)
