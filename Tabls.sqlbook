@@ -1,19 +1,7 @@
 -- SQLBook: Code
-DROP TABLE IF EXISTS Locations CASCADE ;
-DROP TABLE IF EXISTS Position CASCADE ;
-DROP TABLE IF EXISTS Employee_Schedules CASCADE ;
-DROP TABLE IF EXISTS Employees cascade ;
-DROP TABLE IF EXISTS Branches cascade ;
-DROP TABLE IF EXISTS Bar_Inventory CASCADE ;
-DROP TABLE IF EXISTS Security_logs CASCADE ;
-DROP TABLE IF EXISTS Tables CASCADE ;
-DROP TABLE IF EXISTS Guesses CASCADE ;
-DROP TABLE IF EXISTS Membership CASCADE ;
-DROP TABLE IF EXISTS Feedback_reviews CASCADE ;
-DROP TABLE IF EXISTS Reservations CASCADE ;
+CREATE DATABASE IF NOT EXISTS BarDBase;
 
-
-CREATE TABLE Locations(
+CREATE TABLE IF NOT EXISTS Locations(
 	location_ID    SERIAL PRIMARY KEY,
 	address        CHARACTER VARYING (40),
     street_name    CHARACTER VARYING (30),
@@ -23,14 +11,14 @@ CREATE TABLE Locations(
 	country_name   CHARACTER VARYING (25)
 );
 
-CREATE TABLE Position(
+CREATE TABLE IF NOT EXISTS Position(
     position_ID    varchar(10) primary key,
     position_name  varchar(30),
     min_salary     SERIAL,
     max_salary     SERIAL
 );
 
-CREATE TABLE Branches(
+CREATE TABLE IF NOT EXISTS Branches(
 	branch_ID      SERIAL PRIMARY KEY,
 	location_ID    SERIAL,
     branch_name    CHARACTER VARYING(40),
@@ -38,7 +26,7 @@ CREATE TABLE Branches(
     foreign key (location_ID) REFERENCES Branches_Locations (location_ID) ON UPDATE CASCADE  ON DELETE CASCADE
 );
 
-CREATE TABLE Employees(
+CREATE TABLE IF NOT EXISTS Employees(
     employee_ID    varchar(10) primary key,
     position_ID    varchar(10),
     branch_ID      SERIAL,
@@ -54,7 +42,7 @@ CREATE TABLE Employees(
     foreign key (position_ID) REFERENCES Position (position_ID) ON UPDATE CASCADE  ON DELETE CASCADE
 );
 
-CREATE TABLE Employee_Schedules(
+CREATE TABLE IF NOT EXISTS Employee_Schedules(
     schedule_ID    serial PRIMARY KEY,
     branch_ID      SERIAL,
     employee_ID    varchar(10),
@@ -66,7 +54,7 @@ CREATE TABLE Employee_Schedules(
 
 
 
-CREATE TABLE Bar_Inventory(
+CREATE TABLE IF NOT EXISTS Bar_Inventory(
     product_ID     SERIAL PRIMARY KEY,
     branch_ID      SERIAL,
     product_name   varchar(30),
@@ -75,7 +63,7 @@ CREATE TABLE Bar_Inventory(
     foreign key (branch_ID) REFERENCES Branches (branch_ID) ON UPDATE CASCADE  ON DELETE CASCADE
 );
 
-CREATE TABLE Security_logs(
+CREATE TABLE IF NOT EXISTS Security_logs(
     log_ID         serial,
     branch_ID      SERIAL,
     employee_ID    varchar(10),
@@ -85,13 +73,13 @@ CREATE TABLE Security_logs(
     foreign key (employee_ID) REFERENCES Employees (employee_ID) ON UPDATE CASCADE  ON DELETE CASCADE
 );
 
-CREATE TABLE Tables(
+CREATE TABLE IF NOT EXISTS Tables(
     table_ID       SERIAL primary key,
     start_time     time,
     table_status   bool
 );
 
-CREATE TABLE Guesses(
+CREATE TABLE IF NOT EXISTS Guesses(
     branch_ID      SERIAL,
     table_ID       SERIAL,
     guess_first_name varchar(30),
@@ -102,7 +90,7 @@ CREATE TABLE Guesses(
 
 );
 
-create table Membership(
+CREATE TABLE IF NOT EXISTS Membership(
     membership_id  varchar(10) primary key,
     first_name     varchar(30),
     second_name    varchar(30),
@@ -110,7 +98,7 @@ create table Membership(
     membership_status bool
 );
 
-CREATE TABLE Feedback_reviews(
+CREATE TABLE IF NOT EXISTS Feedback_Reviews(
     review_ID      SERIAL primary key,
     membership_id  varchar(10),
     rating         int,
@@ -118,7 +106,7 @@ CREATE TABLE Feedback_reviews(
     foreign key (membership_id) REFERENCES Membership (membership_id) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
-CREATE TABLE Reservations(
+CREATE TABLE IF NOT EXISTS Reservations(
     reservation_ID SERIAL primary key,
     branch_ID      SERIAL,
     table_ID       SERIAL,
