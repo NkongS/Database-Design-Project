@@ -1,0 +1,134 @@
+-- SQLBook: Code
+DROP TABLE IF EXISTS Locations CASCADE ;
+DROP TABLE IF EXISTS Position CASCADE ;
+DROP TABLE IF EXISTS Employee_Schedules CASCADE ;
+DROP TABLE IF EXISTS Employees cascade ;
+DROP TABLE IF EXISTS Branches cascade ;
+DROP TABLE IF EXISTS Bar_Inventory CASCADE ;
+DROP TABLE IF EXISTS Security_logs CASCADE ;
+DROP TABLE IF EXISTS Tables CASCADE ;
+DROP TABLE IF EXISTS Guesses CASCADE ;
+DROP TABLE IF EXISTS Membership CASCADE ;
+DROP TABLE IF EXISTS Feedback_reviews CASCADE ;
+DROP TABLE IF EXISTS Reservations CASCADE ;
+
+
+CREATE TABLE Locations(
+	location_ID    SERIAL PRIMARY KEY,
+	address        CHARACTER VARYING (40),
+    street_name    CHARACTER VARYING (30),
+	city_name      CHARACTER VARYING (30) NOT NULL,
+	province_name  CHARACTER VARYING (25),
+    postal_code    CHARACTER VARYING (12),
+	country_name   CHARACTER VARYING (25)
+);
+
+CREATE TABLE Position(
+    position_ID    varchar(10) primary key,
+    position_name  varchar(30),
+    min_salary     SERIAL,
+    max_salary     SERIAL
+);
+
+CREATE TABLE Branches(
+	branch_ID      SERIAL PRIMARY KEY,
+	location_ID    SERIAL,
+    branch_name    CHARACTER VARYING(40),
+    manager_ID     varchar(10),
+    foreign key (location_ID) REFERENCES Branches_Locations (location_ID) ON UPDATE CASCADE  ON DELETE CASCADE
+);
+
+CREATE TABLE Employees(
+    employee_ID    varchar(10) primary key,
+    position_ID    varchar(10),
+    branch_ID      SERIAL,
+    first_name     varchar(30),
+    last_name      varchar(30),
+    contact_info   numeric(12),
+    email          varchar(45),
+    salary         serial,
+    hire_date      DATE,
+    manager_ID     varchar(10),
+    foreign key (manager_ID) REFERENCES Employees (employee_ID) ON UPDATE CASCADE  ON DELETE CASCADE,
+    foreign key (branch_ID) REFERENCES Branches (branch_ID) ON UPDATE CASCADE  ON DELETE CASCADE,
+    foreign key (position_ID) REFERENCES Position (position_ID) ON UPDATE CASCADE  ON DELETE CASCADE
+);
+
+CREATE TABLE Employee_Schedules(
+    schedule_ID    serial PRIMARY KEY,
+    branch_ID      SERIAL,
+    employee_ID    varchar(10),
+    shift_start     time,
+    shift_end       time,
+    foreign key (branch_ID) REFERENCES Branches (branch_ID) ON UPDATE CASCADE  ON DELETE CASCADE,
+    foreign key (employee_ID) REFERENCES Employees (employee_ID) ON UPDATE CASCADE  ON DELETE CASCADE
+);
+
+
+
+CREATE TABLE Bar_Inventory(
+    product_ID     SERIAL PRIMARY KEY,
+    branch_ID      SERIAL,
+    product_name   varchar(30),
+    quantity       int,
+    price          int,
+    foreign key (branch_ID) REFERENCES Branches (branch_ID) ON UPDATE CASCADE  ON DELETE CASCADE
+);
+
+CREATE TABLE Security_logs(
+    log_ID         serial,
+    branch_ID      SERIAL,
+    employee_ID    varchar(10),
+    log_time       time,
+    activity_log   bool,
+    foreign key (branch_ID) REFERENCES Branches (branch_ID) ON UPDATE CASCADE  ON DELETE CASCADE,
+    foreign key (employee_ID) REFERENCES Employees (employee_ID) ON UPDATE CASCADE  ON DELETE CASCADE
+);
+
+CREATE TABLE Tables(
+    table_ID       SERIAL primary key,
+    start_time     time,
+    table_status   bool
+);
+
+CREATE TABLE Guesses(
+    branch_ID      SERIAL,
+    table_ID       SERIAL,
+    guess_first_name varchar(30),
+    guess_last_name  varchar(30),
+    guess_band     varchar(30),
+    foreign key (branch_ID) REFERENCES Branches (branch_ID) ON UPDATE CASCADE  ON DELETE CASCADE,
+    foreign key (table_ID) REFERENCES Tables (table_ID) ON UPDATE CASCADE ON DELETE CASCADE
+
+);
+
+create table Membership(
+    membership_id  varchar(10) primary key,
+    first_name     varchar(30),
+    second_name    varchar(30),
+    contact_info   numeric(12),
+    membership_status bool
+);
+
+CREATE TABLE Feedback_reviews(
+    review_ID      SERIAL primary key,
+    membership_id  varchar(10),
+    rating         int,
+    comment        text,
+    foreign key (membership_id) REFERENCES Membership (membership_id) ON UPDATE CASCADE ON DELETE CASCADE
+);
+
+CREATE TABLE Reservations(
+    reservation_ID SERIAL primary key,
+    branch_ID      SERIAL,
+    table_ID       SERIAL,
+    membership_id  varchar(10),
+    reservation_time time,
+    number_of_guess  int,
+    foreign key (membership_id) REFERENCES Membership (membership_id) ON UPDATE CASCADE ON DELETE CASCADE,
+    foreign key (table_ID) REFERENCES Tables (table_ID) ON UPDATE CASCADE ON DELETE CASCADE,
+    foreign key (branch_ID) REFERENCES Branches (branch_ID) ON UPDATE CASCADE ON DELETE CASCADE
+
+);
+
+ALTER TABLE Branches ADD foreign key (manager_ID) REFERENCES Employees (employee_ID) ON UPDATE CASCADE  ON DELETE CASCADE
