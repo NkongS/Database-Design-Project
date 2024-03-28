@@ -1,6 +1,5 @@
 from django.db import models
 
-# Create your models here.
 class Locations(models.Model):
     location_ID = models.AutoField(primary_key=True)
     address_no = models.CharField(max_length=40)
@@ -19,7 +18,7 @@ class Employee_Position(models.Model):
 class Employees(models.Model):
     employee_ID = models.CharField(primary_key=True, max_length=10)
     position_ID = models.ForeignKey(Employee_Position, on_delete=models.CASCADE)
-    branch_ID = models.ForeignKey('Branches', on_delete=models.CASCADE)
+    branch_ID = models.ForeignKey('Branches', on_delete=models.CASCADE)  # added field
     first_name = models.CharField(max_length=30)
     last_name = models.CharField(max_length=30)
     contact_info = models.DecimalField(max_digits=12, decimal_places=0)
@@ -58,6 +57,7 @@ class BarTables(models.Model):
     table_ID = models.AutoField(primary_key=True)
     start_time = models.TimeField()
     table_status = models.BooleanField()
+    reservation_ID = models.ForeignKey('Reservations', on_delete=models.CASCADE)  # added field
 
 class Guesses(models.Model):
     branch_ID = models.ForeignKey(Branches, on_delete=models.CASCADE)

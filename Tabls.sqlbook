@@ -1,4 +1,5 @@
 -- SQLBook: Code
+-- Active: 1711567510462@@34.126.125.221@5432@postgres@public
 DROP TABLE IF EXISTS Locations, Branches, Employees, Employee_Schedules, Bar_Inventory, Security_Logs, BarTables, Guesses, Membership, Feedback_Reviews, Reservations, Employee_Position; 
 
 CREATE TABLE Locations (
@@ -21,7 +22,6 @@ CREATE TABLE Employee_Position (
 CREATE TABLE Employees (
     employee_ID    VARCHAR(10) PRIMARY KEY,
     position_ID    VARCHAR(10) REFERENCES Employee_Position(position_ID) ON UPDATE CASCADE ON DELETE CASCADE,
-    branch_ID      INTEGER REFERENCES Branches(branch_ID) ON UPDATE CASCADE ON DELETE CASCADE,
     first_name     VARCHAR(30),
     last_name      VARCHAR(30),
     contact_info   NUMERIC(12),
@@ -36,6 +36,10 @@ CREATE TABLE Branches (
     branch_name    VARCHAR(40),
     employee_ID    VARCHAR(10) REFERENCES Employees(employee_ID) ON UPDATE CASCADE ON DELETE CASCADE
 );
+
+--
+ALTER TABLE Employees ADD COLUMN branch_ID INTEGER REFERENCES Branches(branch_ID) ON UPDATE CASCADE ON DELETE CASCADE; --add branch_ID as fk to Employees table
+--
 
 CREATE TABLE Employee_Schedules (
     schedule_ID    SERIAL PRIMARY KEY,
@@ -101,3 +105,7 @@ CREATE TABLE Reservations (
     reservation_time   TIME,
     number_of_guests   INTEGER
 );
+
+--
+ALTER TABLE BarTables ADD COLUMN reservation_ID INTEGER REFERENCES Reservations(reservation_ID) ON UPDATE CASCADE ON DELETE CASCADE; --add reservation_ID as fk to BarTables table
+--
