@@ -60,6 +60,9 @@ class BarTables(models.Model):
     check_out_time = models.TimeField()
     table_status = models.BooleanField()
 
+    class Meta:
+        db_table = 'BarTables'
+
 class Guesses(models.Model):
     branch = models.ForeignKey(Branches, on_delete=models.CASCADE)
     table_ID = models.CharField(max_length=8)
