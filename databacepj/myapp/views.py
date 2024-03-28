@@ -1,6 +1,28 @@
 from django.shortcuts import render
-from myapp.models import Branch
+from myapp.models import Locations
+from myapp.models import Employee_Position
+from myapp.models import Employees
+from myapp.models import Branches
+from myapp.models import Employee_Schedules
+from myapp.models import Bar_Inventory
+from myapp.models import Security_Logs
+from myapp.models import BarTables
+from myapp.models import Guesses
+from myapp.models import Membership
+from myapp.models import Feedback_Reviews
+from myapp.models import Reservations
 
-branches = Branch.objects.all()
+Locations = Locations.objects.all()
+Employee_Position = Employee_Position.objects.all()
+Employees = Employees.objects.all()
+Branches = Branches.objects.all()
+Employee_Schedules = Employee_Schedules.objects.all()
+Bar_Inventory = Bar_Inventory.objects.all()
+Security_Logs = Security_Logs.objects.all()
+BarTables = BarTables.objects.all()
+Guesses = Guesses.objects.all()
+Membership = Membership.objects.all()
+Feedback_Reviews = Feedback_Reviews.objects.all()
+Reservations = Reservations.objects.all()
 
 # Create your views here.
