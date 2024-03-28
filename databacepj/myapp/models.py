@@ -18,7 +18,7 @@ class Employee_Position(models.Model):
 class Employees(models.Model):
     employee_ID = models.CharField(primary_key=True, max_length=10)
     position_ID = models.ForeignKey(Employee_Position, on_delete=models.CASCADE)
-    branch_ID = models.ForeignKey('Branches', on_delete=models.CASCADE)  # added field
+    branch = models.ForeignKey('Branches', on_delete=models.CASCADE)
     first_name = models.CharField(max_length=30)
     last_name = models.CharField(max_length=30)
     contact_info = models.DecimalField(max_digits=12, decimal_places=0)
@@ -28,47 +28,48 @@ class Employees(models.Model):
 
 class Branches(models.Model):
     branch_ID = models.AutoField(primary_key=True)
-    location_ID = models.ForeignKey(Locations, on_delete=models.CASCADE)
+    location = models.ForeignKey(Locations, on_delete=models.CASCADE)
     branch_name = models.CharField(max_length=40)
-    employee_ID = models.ForeignKey(Employees, on_delete=models.CASCADE)
+    employee_ID = models.CharField(max_length=10) 
 
 class Employee_Schedules(models.Model):
     schedule_ID = models.AutoField(primary_key=True)
-    branch_ID = models.ForeignKey(Branches, on_delete=models.CASCADE)
-    employee_ID = models.ForeignKey(Employees, on_delete=models.CASCADE)
+    branch = models.ForeignKey(Branches, on_delete=models.CASCADE)
+    employee_ID = models.CharField(max_length=10)
     shift_start = models.TimeField()
     shift_end = models.TimeField()
 
 class Bar_Inventory(models.Model):
     product_ID = models.AutoField(primary_key=True)
-    branch_ID = models.ForeignKey(Branches, on_delete=models.CASCADE)
+    branch = models.ForeignKey(Branches, on_delete=models.CASCADE)
     product_name = models.CharField(max_length=30)
     quantity = models.IntegerField()
     price = models.IntegerField()
 
 class Security_Logs(models.Model):
     log_ID = models.AutoField(primary_key=True)
-    branch_ID = models.ForeignKey(Branches, on_delete=models.CASCADE)
-    employee_ID = models.ForeignKey(Employees, on_delete=models.CASCADE)
+    branch = models.ForeignKey(Branches, on_delete=models.CASCADE)
+    employee_ID = models.CharField(max_length=10)
     log_time = models.TimeField()
     activity_log = models.BooleanField()
 
 class BarTables(models.Model):
-    table_ID = models.AutoField(primary_key=True)
+    branch = models.ForeignKey(Branches, on_delete=models.CASCADE)
+    table_ID = models.CharField(primary_key=True, max_length=8)
     start_time = models.TimeField()
+    check_out_time = models.TimeField()
     table_status = models.BooleanField()
-    reservation_ID = models.ForeignKey('Reservations', on_delete=models.CASCADE)  # added field
 
 class Guesses(models.Model):
-    branch_ID = models.ForeignKey(Branches, on_delete=models.CASCADE)
-    table_ID = models.ForeignKey(BarTables, on_delete=models.CASCADE)
+    branch = models.ForeignKey(Branches, on_delete=models.CASCADE)
+    table_ID = models.CharField(max_length=8)
     guess_first_name = models.CharField(max_length=30)
     guess_last_name = models.CharField(max_length=30)
     guess_band = models.CharField(max_length=30)
 
     class Meta:
         constraints = [
-            models.UniqueConstraint(fields=['branch_ID', 'table_ID'], name='unique_guess')
+            models.UniqueConstraint(fields=['branch', 'table_ID'], name='unique_guess')
         ]
 
 class Membership(models.Model):
@@ -80,14 +81,14 @@ class Membership(models.Model):
 
 class Feedback_Reviews(models.Model):
     review_ID = models.AutoField(primary_key=True)
-    membership_id = models.ForeignKey(Membership, on_delete=models.CASCADE)
+    membership = models.ForeignKey(Membership, on_delete=models.CASCADE)
     rating = models.IntegerField()
     feedbacks = models.TextField()
 
 class Reservations(models.Model):
     reservation_ID = models.AutoField(primary_key=True)
-    branch_ID = models.ForeignKey(Branches, on_delete=models.CASCADE)
-    table_ID = models.ForeignKey(BarTables, on_delete=models.CASCADE)
-    membership_id = models.ForeignKey(Membership, on_delete=models.CASCADE)
+    branch = models.ForeignKey(Branches, on_delete=models.CASCADE)
+    table = models.ForeignKey(BarTables, on_delete=models.CASCADE)
+    membership = models.ForeignKey(Membership, on_delete=models.CASCADE)
     reservation_time = models.TimeField()
     number_of_guests = models.IntegerField()
