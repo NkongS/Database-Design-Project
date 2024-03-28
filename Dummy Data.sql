@@ -30,12 +30,11 @@ INSERT INTO Branches (location_ID, branch_name, employee_ID) VALUES
 (1, 'Branch1', 'EMP001'),
 (2, 'Branch2', 'EMP006');
 
-UPDATE Employees SET branch_ID = 1 WHERE employee_ID = 'EMP001', 'EMP002', 'EMP003', 'EMP004', 'EMP005';
-UPDATE Employees SET branch_ID = 2 WHERE employee_ID = 'EMP006', 'EMP007', 'EMP008', 'EMP009', 'EMP010';
+UPDATE Employees SET branch_ID = 1 WHERE employee_ID IN ('EMP001', 'EMP002', 'EMP003', 'EMP004', 'EMP005');
+UPDATE Employees SET branch_ID = 2 WHERE employee_ID IN ('EMP006', 'EMP007', 'EMP008', 'EMP009', 'EMP010');
 
--- Inserting Employee_Shedules table data
-INSERT INTO Employee_Schedules (branch_ID, employee_ID, shift_start, shift_end)
-VALUES 
+-- Inserting Employee_Schedules table data
+INSERT INTO Employee_Schedules (branch_ID, employee_ID, shift_start, shift_end) VALUES 
 (1, 'EMP001', '16:30:00', '01:00:00'),
 (1, 'EMP002', '17:30:00', '01:00:00'),
 (1, 'EMP003', '17:30:00', '01:00:00'),
@@ -45,11 +44,10 @@ VALUES
 (2, 'EMP007', '17:30:00', '01:00:00'),
 (2, 'EMP008', '17:30:00', '01:00:00'),
 (2, 'EMP009', '17:30:00', '01:00:00'),
-(2, 'EMP0010', '17:00:00', '21:00:00');
+(2, 'EMP010', '17:00:00', '21:00:00');
 
 -- Inserting Bar_Inventory table data
-INSERT INTO Bar_Inventory (branch_ID, product_name, quantity, price)
-VALUES 
+INSERT INTO Bar_Inventory (branch_ID, product_name, quantity, price) VALUES 
 (1, 'Beer', 100, 5),
 (1, 'Wine', 50, 10),
 (1, 'Whiskey', 20, 15),
@@ -62,8 +60,7 @@ VALUES
 (2, 'Rum', 40, 8);
 
 -- Inserting Security_Logs table data
-INSERT INTO Security_Logs (branch_ID, employee_ID, log_time, activity_log)
-VALUES 
+INSERT INTO Security_Logs (branch_ID, employee_ID, log_time, activity_log) VALUES 
 (1, 'EMP001', '16:00:00', TRUE),
 (1, 'EMP002', '17:29:00', TRUE),
 (1, 'EMP003', '17:29:00', TRUE),
@@ -73,7 +70,7 @@ VALUES
 (2, 'EMP007', '17:29:00', TRUE),
 (2, 'EMP008', '17:29:00', TRUE),
 (2, 'EMP009', '17:00:00', TRUE),
-(2, 'EMP0010', '16:50:00', TRUE);
+(2, 'EMP010', '16:50:00', TRUE);
 
 -- Inserting BarTables table data
 INSERT INTO BarTables (branch_ID, table_ID, start_time, table_status) VALUES
@@ -82,13 +79,12 @@ INSERT INTO BarTables (branch_ID, table_ID, start_time, table_status) VALUES
 (1, 'B01T0003', '19:00:00', FALSE),
 (2, 'B02T0001', '17:30:00', TRUE),
 (2, 'B02T0002', '19:00:00', TRUE),
-(2, 'Bo2T0003', '19:00:00', FALSE);
+(2, 'B02T0003', '19:00:00', FALSE);
 
 -- Inserting Guesses table data
-INSERT INTO Guesses (branch_ID, table_ID, guess_first_name, guess_last_name, guess_band)
-VALUES 
-(1, 1, 'John', 'Smith', 'The Band'),
-(2, 2, 'Jane', 'Doe', 'Solo Artist'),
+INSERT INTO Guesses (branch_ID, table_ID, guess_first_name, guess_last_name, guess_band) VALUES 
+(1, 'B01T0001', 'John', 'Smith', 'The Band'),
+(2, 'B02T0001', 'Jane', 'Doe', 'Solo Artist');
 
 
 -- Inserting Membership table data

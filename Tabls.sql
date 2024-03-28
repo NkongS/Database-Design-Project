@@ -1,5 +1,3 @@
--- SQLBook: Code
--- Active: 1711567510462@@34.126.125.221@5432@postgres@public
 DROP TABLE IF EXISTS Locations, Branches, Employees, Employee_Schedules, Bar_Inventory, Security_Logs, BarTables, Guesses, Membership, Feedback_Reviews, Reservations, Employee_Position; 
 
 CREATE TABLE Locations (
@@ -66,14 +64,16 @@ CREATE TABLE Security_Logs (
 );
 
 CREATE TABLE BarTables (
-    table_ID       SERIAL PRIMARY KEY,
+    branch_ID      INTEGER REFERENCES Branches(branch_ID) ON UPDATE CASCADE ON DELETE CASCADE,
+    table_ID       VARCHAR(8) PRIMARY KEY,
     start_time     TIME,
+    check_out_time TIME,
     table_status   BOOLEAN
 );
 
 CREATE TABLE Guesses (
     branch_ID          INTEGER,
-    table_ID           INTEGER,
+    table_ID           VARCHAR(8),
     guess_first_name   VARCHAR(30),
     guess_last_name    VARCHAR(30),
     guess_band         VARCHAR(30),
@@ -100,12 +100,11 @@ CREATE TABLE Feedback_Reviews (
 CREATE TABLE Reservations (
     reservation_ID     SERIAL PRIMARY KEY,
     branch_ID          INTEGER REFERENCES Branches(branch_ID) ON UPDATE CASCADE ON DELETE CASCADE,
-    table_ID           INTEGER REFERENCES BarTables(table_ID) ON UPDATE CASCADE ON DELETE CASCADE,
+    table_ID           VARCHAR(8) REFERENCES BarTables(table_ID) ON UPDATE CASCADE ON DELETE CASCADE,
     membership_id      VARCHAR(10) REFERENCES Membership(membership_id) ON UPDATE CASCADE ON DELETE CASCADE,
     reservation_time   TIME,
     number_of_guests   INTEGER
 );
-
 --
 ALTER TABLE BarTables ADD COLUMN reservation_ID INTEGER REFERENCES Reservations(reservation_ID) ON UPDATE CASCADE ON DELETE CASCADE; --add reservation_ID as fk to BarTables table
 --
