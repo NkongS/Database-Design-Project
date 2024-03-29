@@ -1,7 +1,15 @@
 from django.shortcuts import render
-from .models import Locations
+import calendar
+from datetime import datetime
+#from .models import Locations
 
-# Create your views here.
-def locations(request):
-    locations = Locations.objects.all()
-    return render(request, 'locations.html'), {'locations': locations}
+def home(request):
+    now = datetime.now()
+    current_year = now.year
+    current_month = now.strftime('%B')
+
+    return render(request, 'home.html', {'current_year': current_year, 'current_month': current_month})
+
+#def locations(request):
+#    locations = Locations.objects.all()
+#    return render(request, 'locations.html'), {'locations': locations}

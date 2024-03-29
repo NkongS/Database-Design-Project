@@ -1,0 +1,21 @@
+{%extends 'base.html' %}
+
+{% block content %}
+
+    <center>
+    <h1> {{ current_month }} {{ current_year }} <span id="time"></span></h1>
+    <h1> ICCS225 Project: Bar Database System </h1>
+    </center>
+
+{% endblock %}    
+    
+    <script>
+    function updateTime() {
+      var d = new Date();
+      var t = d.toLocaleTimeString();
+      document.getElementById("time").innerHTML = t;
+    }
+    
+    // Update time every second
+    setInterval(updateTime, 1000);
+    </script>
