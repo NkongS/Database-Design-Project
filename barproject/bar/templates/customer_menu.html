@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+
+{% block content %}
+<style>
+.inventory {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+.item {
+    width: 200px;
+    margin-bottom: 20px;
+    border: 1px solid #000;
+    padding: 10px;
+    box-sizing: border-box;
+    text-align: center;
+}
+
+.title {
+    text-align: center;
+    border: 1px solid #000;
+    padding: 10px;
+    margin-bottom: 20px;
+}
+
+.order-form {
+    display: flex;
+    justify-content: center;
+}
+</style>
+
+<div class="title">
+    <h2>Order Menu</h2>
+</div>
+
+<div class="inventory">
+    {% for item in inventory %}
+    <div class="item">
+        <h3>{{ item.product_name }}</h3>
+        <p>Price: ${{ item.price }}</p>
+    </div>
+    {% empty %}
+    <p>No items in inventory.</p>
+    {% endfor %}
+</div>
+
+<div class="order-form">
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    {{ formset.management_form }}
+    {% for form in formset %}
+        {{ form.as_p }}
+    {% endfor %}
+    <button type="submit">Submit</button>
+</form>
+</div>
+
+<style>
+    .square-btn {
+        width: 100px;
+        height: 100px;
+        padding: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    </style>
+    
+    <div class="tables text-center mt-5">
+        <h2>View Orders</h2>
+        <div class="row justify-content-center">
+            {% for table in tables %}
+            <div class="col-auto mx-2">
+                <a href="{% url 'table_orders' branch_id=table.branch_id table_id=table.table_id %}" class="btn btn-primary btn-lg my-2 square-btn">{{ table.table_id }}</a>
+            </div>
+            {% empty %}
+            <p>No tables available.</p>
+            {% endfor %}
+        </div>
+    </div>
+
+{% endblock %}

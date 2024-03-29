@@ -23,9 +23,9 @@ class BarInventory(models.Model):
         db_table = 'bar_inventory'
     def __str__(self):
         if self.branch:
-            return f"Branch: {self.branch.branch_id}, {self.product_name}, Quantity: {self.quantity}, Price: {self.price}"
+            return f"Branch: {self.branch.branch_id}, {self.product_name}, Price: {self.price}"
         else:
-            return f"Product ID: {self.product_id}, {self.product_name}, Quantity: {self.quantity}, Price: {self.price}"
+            return f"Product ID: {self.product_id}, {self.product_name}, Price: {self.price}"
 
 
 
@@ -41,7 +41,7 @@ class Bartables(models.Model):
         managed = False
         db_table = 'bartables'
     def __str__(self):
-        table_str = f"Table ID: {self.table_id}, Branch ID: {self.branch.branch_id}, Status: {self.table_status}"
+        table_str = f"Table ID: {self.table_id}, Status: {self.table_status}"
         return table_str
 
 
@@ -221,7 +221,8 @@ class Orders(models.Model):
     order_date = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"Order {self.order_id}, {self.item.product_name}"
+        product_name = self.item.product_name if self.item else 'No product'
+        return f"Order {self.order_id}, {product_name}"
 
 class OrderProduct(models.Model):
     branch = models.ForeignKey(Branches, models.DO_NOTHING, blank=True, null=True)
@@ -230,7 +231,11 @@ class OrderProduct(models.Model):
     quantity = models.IntegerField()
 
     def __str__(self):
-        return f"Order {self.order.order_id}, Product {self.item.product_name}, Quantity {self.quantity}"
+        product_name = self.item.product_name if self.item else 'No product'
+        return f"Order {self.order.order_id}, Product {product_name}, Quantity {self.quantity}"
+    
+    def total_price(self):
+        return self.quantity * self.item.price
 
 @receiver(post_save, sender=Orders)
 def update_inventory_after_order_completed(sender, instance, **kwargs):

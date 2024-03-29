@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<style>
+    .inventory {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+    }
+    
+    .order {
+        width: 200px;
+        margin-bottom: 20px;
+        border: 1px solid #000;
+        padding: 10px;
+        box-sizing: border-box;
+        text-align: center;
+    }
+    
+    .title {
+        text-align: center;
+        border: 1px solid #000;
+        padding: 10px;
+        margin-bottom: 20px;
+    }
+
+    .total-bill {
+        position: fixed;
+        bottom: 0;
+        right: 0;
+        padding: 10px;
+        background-color: #f8f8f8;
+        border: 1px solid #000;
+    }
+</style>
+
+<div class="title">
+    <h1>Orders for Table {{ table_id }}</h1>
+</div>
+
+<div class="inventory">
+{% if orders %}
+<div class="orders">
+    {% for order in orders %}
+    <div class="order">
+        <h2>Order {{ order.id }}</h2>
+        {% for order_product in order.orderproduct_set.all %}
+        <p>Item: {{ order.item.product_name }}</p>
+        <p>Quantity: {{ order_product.quantity }}</p>
+        <p>Price: ${{ order_product.total_price }}</p>
+        <p>Status: {% if order.completed %}Completed{% else %}Pending{% endif %}</p>
+        {% endfor %}
+    </div>
+    {% endfor %}
+</div>
+</div>
+
+<div class="total-bill">
+    <h2>Total bill: ${{ total_bill }}</h2>
+</div>
+
+{% else %}
+<p>No orders currently.</p>
+{% endif %}
+
+{% endblock %}
+

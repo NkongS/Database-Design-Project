@@ -1,28 +1,31 @@
 from django import forms
+from django.forms import formset_factory
 from .models import Orders, OrderProduct, BarInventory, Bartables
-from django.shortcuts import render, redirect
+
+class ProductNameChoiceField(forms.ModelChoiceField):
+    def label_from_instance(self, obj):
+        return obj.product_name
 
 class OrderItemForm(forms.Form):
-    product = forms.ModelChoiceField(queryset=BarInventory.objects.all())
+    def __init__(self, *args, **kwargs):
+        branch_id = kwargs.pop('branch_id')
+        super(OrderItemForm, self).__init__(*args, **kwargs)
+        self.fields['product'].queryset = BarInventory.objects.filter(branch_id=branch_id)
+
+    product = ProductNameChoiceField(queryset=BarInventory.objects.none())
     quantity = forms.IntegerField(min_value=1, max_value=5)
 
-class OrderForm(forms.Form):
-    table_id = forms.ModelChoiceField(queryset=Bartables.objects.all())
-    order_items = forms.FormSetField(OrderItemForm)
+OrderItemFormSet = formset_factory(OrderItemForm, extra=1)
 
-def create_order(request):
-    if request.method == 'POST':
-        form = OrderForm(request.POST)
-        if form.is_valid():
-            order = Orders.objects.create(table_id=form.cleaned_data['table_id'])
-            for item_form in form.cleaned_data['order_items']:
-                OrderProduct.objects.create(
-                    order=order,
-                    item=item_form.cleaned_data['product'],
-                    quantity=item_form.cleaned_data['quantity'],
-                    branch=item_form.cleaned_data['product'].branch
-                )
-            return redirect('order_success')
-    else:
-        form = OrderForm()
-    return render(request, 'create_order.html', {'form': form})
+class TableIDChoiceField(forms.ModelChoiceField):
+    def label_from_instance(self, obj):
+        return obj.table_id
+
+class OrderForm(forms.Form):
+    def __init__(self, *args, **kwargs):
+        branch_id = kwargs.pop('branch_id', None)
+        super(OrderForm, self).__init__(*args, **kwargs)
+        if branch_id:
+            self.fields['table_id'].queryset = Bartables.objects.filter(branch_id=branch_id)
+
+    table_id = TableIDChoiceField(queryset=Bartables.objects.none())

@@ -2,7 +2,7 @@
 
 {% block content %}
 <div style="display: flex; justify-content: center; align-items: center; height: 100vh;">
-    <a href="{% url 'branch_employees' %}" class="btn btn-primary" style="font-size: 2em; margin: 1em; padding: 1em;">Employee</a>
-    <a href="{% url 'customer_menu' %}" class="btn btn-primary" style="font-size: 2em; margin: 1em; padding: 1em;">Customer</a>
+    <a href="{% url 'branch_employees' branch_id=branch_id %}" class="btn btn-primary" style="font-size: 2em; margin: 1em; padding: 1em;">Employee</a>
+    <a href="{% url 'customer_menu' branch_id=branch_id %}" class="btn btn-primary" style="font-size: 2em; margin: 1em; padding: 1em;">Customer</a>
 </div>
 {% endblock %}
