@@ -93,6 +93,15 @@ INSERT INTO Membership (membership_id, first_name, second_name, contact_info, me
 ('M01', 'Member1', 'Lastname1', 1234567890, TRUE),
 ('M02', 'Member2', 'Lastname2', 0987654321, TRUE);
 
+-- Inserting Feedback_Reviews table data
+INSERT INTO Feedback_Reviews (membership_id, rating, feedbacks) VALUES
+('M01', 5, 'Great service!'),
+('M02', 4, 'Good food, but a bit noisy.'),
+(NULL, 3, 'Decent place, but could use some improvements.'),
+(NULL, 5, 'Loved the ambiance! Will visit again.'),
+('M01', 4, 'Friendly staff, but the wait time was long.'),
+(NULL, 2, 'Not satisfied with the service. Needs improvement.');
+
 -- Inserting Reservation table data
 INSERT INTO Reservations (branch_ID, table_ID, membership_id, reservation_time, number_of_guests) VALUES
 (1, 'B01T0001', 'M00', '17:00:00', 5),

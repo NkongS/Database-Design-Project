@@ -18,6 +18,12 @@ class BarInventory(models.Model):
     class Meta:
         managed = False
         db_table = 'bar_inventory'
+    def __str__(self):
+        if self.branch:
+            return f"Branch: {self.branch.branch_id}, {self.product_name}, Quantity: {self.quantity}, Price: {self.price}"
+        else:
+            return f"Product ID: {self.product_id}, {self.product_name}, Quantity: {self.quantity}, Price: {self.price}"
+
 
 
 class Bartables(models.Model):
@@ -31,6 +37,9 @@ class Bartables(models.Model):
     class Meta:
         managed = False
         db_table = 'bartables'
+    def __str__(self):
+        table_str = f"Table ID: {self.table_id}, Branch ID: {self.branch.branch_id}, Status: {self.table_status}"
+        return table_str
 
 
 class Branches(models.Model):
@@ -42,6 +51,9 @@ class Branches(models.Model):
     class Meta:
         managed = False
         db_table = 'branches'
+    def __str__(self):
+        branch_str = f"Branch: {self.branch_id}, {self.branch_name}, {self.location}"
+        return branch_str
 
 
 class EmployeePosition(models.Model):
@@ -53,6 +65,9 @@ class EmployeePosition(models.Model):
     class Meta:
         managed = False
         db_table = 'employee_position'
+    def __str__(self):
+        position_str = f"Position ID: {self.position_id}, {self.position_name}, Salary: {self.min_salary} - {self.max_salary}"
+        return position_str
 
 
 class EmployeeSchedules(models.Model):
@@ -65,6 +80,9 @@ class EmployeeSchedules(models.Model):
     class Meta:
         managed = False
         db_table = 'employee_schedules'
+    def __str__(self):
+        schedule_str = f"Schedule ID: {self.schedule_id}, Branch: {self.branch}, Employee: {self.employee}, Shift: {self.shift_start} - {self.shift_end}"
+        return schedule_str
 
 
 class Employees(models.Model):
@@ -81,6 +99,9 @@ class Employees(models.Model):
     class Meta:
         managed = False
         db_table = 'employees'
+    def __str__(self):
+        employee_str = f"Branch: {self.branch.branch_id}, Employee ID: {self.employee_id}, {self.first_name} {self.last_name}, {self.position.position_name}, {self.salary}"
+        return employee_str
 
 
 class FeedbackReviews(models.Model):
@@ -92,6 +113,9 @@ class FeedbackReviews(models.Model):
     class Meta:
         managed = False
         db_table = 'feedback_reviews'
+    def __str__(self):
+        review_str = f"Review ID: {self.review_id}, Membership: {(self.membership.membership_id if self.membership else 'None')}, Rating: {self.rating}"
+        return review_str
 
 
 class Guesses(models.Model):
@@ -105,6 +129,9 @@ class Guesses(models.Model):
         managed = False
         db_table = 'guesses'
         unique_together = (('branch', 'table'),)
+    def __str__(self):
+        guess_str = f"Branch: {self.branch}, Table: {self.table}, {self.guess_first_name} {self.guess_last_name}, Band: {self.guess_band}"
+        return guess_str
 
 
 class Locations(models.Model):
@@ -120,7 +147,8 @@ class Locations(models.Model):
         managed = False
         db_table = 'locations'
     def __str__(self):
-        return self.city_name
+        location_str = f"Location ID: {self.location_id}, {self.city_name}, {self.country_name}"
+        return location_str
 
 class Membership(models.Model):
     membership_id = models.CharField(primary_key=True, max_length=10)
@@ -132,6 +160,9 @@ class Membership(models.Model):
     class Meta:
         managed = False
         db_table = 'membership'
+    def __str__(self):
+        membership_str = f"Membership ID: {self.membership_id}, {self.first_name} {self.second_name}, Status: {self.membership_status}"
+        return membership_str
 
 
 class Reservations(models.Model):
@@ -145,6 +176,9 @@ class Reservations(models.Model):
     class Meta:
         managed = False
         db_table = 'reservations'
+    def __str__(self):
+        reservation_str = f"Reservation ID: {self.reservation_id}, Branch: {self.branch}, Table: {self.table}, Membership: {self.membership}, Time: {self.reservation_time}, Guests: {self.number_of_guests}"
+        return reservation_str
 
 
 class SecurityLogs(models.Model):
@@ -157,3 +191,6 @@ class SecurityLogs(models.Model):
     class Meta:
         managed = False
         db_table = 'security_logs'
+    def __str__(self):
+        log_str = f"Log ID: {self.log_id}, Branch: {self.branch}, Employee: {self.employee}, Time: {self.log_time}, Activity: {self.activity_log}"
+        return log_str
