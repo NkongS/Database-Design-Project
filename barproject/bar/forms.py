@@ -7,13 +7,15 @@ class ProductNameChoiceField(forms.ModelChoiceField):
         return obj.product_name
 
 class OrderItemForm(forms.Form):
+    QUANTITY_CHOICES = [(i, str(i)) for i in range(1, 6)]
+
     def __init__(self, *args, **kwargs):
         branch_id = kwargs.pop('branch_id')
         super(OrderItemForm, self).__init__(*args, **kwargs)
         self.fields['product'].queryset = BarInventory.objects.filter(branch_id=branch_id)
 
     product = ProductNameChoiceField(queryset=BarInventory.objects.none())
-    quantity = forms.IntegerField(min_value=1, max_value=5)
+    quantity = forms.ChoiceField(choices=QUANTITY_CHOICES)
 
 OrderItemFormSet = formset_factory(OrderItemForm, extra=1)
 
