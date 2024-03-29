@@ -130,7 +130,7 @@ class Guesses(models.Model):
         db_table = 'guesses'
         unique_together = (('branch', 'table'),)
     def __str__(self):
-        guess_str = f"Branch: {self.branch}, Table: {self.table}, {self.guess_first_name} {self.guess_last_name}, Band: {self.guess_band}"
+        guess_str = f"Branch: {self.branch.branch_id}, Table: {self.table.table_id}, {self.guess_first_name} {self.guess_last_name}, Band: {self.guess_band}"
         return guess_str
 
 
