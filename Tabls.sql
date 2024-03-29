@@ -1,4 +1,5 @@
-DROP TABLE IF EXISTS Locations, Branches, Employees, Employee_Schedules, Bar_Inventory, Security_Logs, BarTables, Guesses, Membership, Feedback_Reviews, Reservations, Employee_Position; 
+-- Active: 1711567510462@@34.126.125.221@5432@postgres@public
+DROP TABLE IF EXISTS Locations, Branches, Employees, Employee_Schedules, Bar_Inventory, Security_Logs, BarTables, Guesses, Membership, Feedback_Reviews, Reservations, Employee_Position, Orders, OrderProduct; 
 
 CREATE TABLE Locations (
     location_ID    SERIAL PRIMARY KEY,
@@ -108,3 +109,19 @@ CREATE TABLE Reservations (
 --
 ALTER TABLE BarTables ADD COLUMN reservation_ID INTEGER REFERENCES Reservations(reservation_ID) ON UPDATE CASCADE ON DELETE CASCADE; --add reservation_ID as fk to BarTables table
 --
+
+CREATE TABLE Orders (
+    order_id        SERIAL PRIMARY KEY,
+    branch_ID       INTEGER REFERENCES Branches(branch_ID) ON UPDATE CASCADE ON DELETE CASCADE,
+    item_id         INTEGER REFERENCES Bar_Inventory(product_ID) ON UPDATE CASCADE ON DELETE CASCADE,
+    table_id        VARCHAR(8) REFERENCES BarTables(table_ID) ON UPDATE CASCADE ON DELETE CASCADE,
+    completed       BOOLEAN DEFAULT FALSE,
+    order_date      TIME DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE OrderProduct (
+    branch_ID       INTEGER REFERENCES Branches(branch_ID) ON UPDATE CASCADE ON DELETE CASCADE,
+    item_id         INTEGER REFERENCES Bar_Inventory(product_ID) ON UPDATE CASCADE ON DELETE CASCADE,
+    order_id        INTEGER REFERENCES Orders(order_id) ON UPDATE CASCADE ON DELETE CASCADE,
+    quantity        INTEGER
+);

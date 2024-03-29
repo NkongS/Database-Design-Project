@@ -10,6 +10,9 @@ from .models import Guesses
 from .models import Membership
 from .models import Reservations
 from .models import SecurityLogs
+from .models import Orders
+from .models import OrderProduct
+
 
 # Register your models here.
 admin.site.register(Locations)
@@ -23,3 +26,6 @@ admin.site.register(Guesses)
 admin.site.register(Membership)
 admin.site.register(Reservations)
 admin.site.register(SecurityLogs)
+admin.site.register(Orders)
+admin.site.register(OrderProduct)
+

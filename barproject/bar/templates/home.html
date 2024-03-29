@@ -7,6 +7,30 @@
     <h1> ICCS225 Project: Bar Database System </h1>
     </center>
 
+    <style>
+    .review-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+    }
+    .review-block {
+      border: 1px solid #000;
+      padding: 10px;
+      margin: 10px;
+      flex: 1 0 21%;  /* Grow and shrink, basis */
+    }
+    </style>
+
+    <div class="review-container">
+        {% for review in reviews %}
+            <div class="review-block">
+                <h2>{{ review.membership.first_name }} {{ review.membership.second_name }}{% if not review.membership %}Customer{% endif %}</h2>
+                <h3>Rating: {{ review.rating }}</h3>
+                <p>{{ review.feedbacks }}</p>
+            </div>
+        {% endfor %}
+    </div>
+
 {% endblock %}    
     
     <script>

@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Orders</h2>
+{% if has_orders %}
+    {% for order in orders %}
+    <div style="border: 1px solid black; margin-bottom: 1em; padding: 1em;">
+        <h3>Order ID: {{ order.id }}</h3>
+        <p>Product: {{ order.product.name }}</p>
+        <p>Quantity: {{ order.quantity }}</p>
+        <p>Price: {{ order.price }}</p>
+        <form method="post" action="{% url 'mark_order_complete' order.id %}">
+            {% csrf_token %}
+            <button type="submit">Mark as Complete</button>
+        </form>
+    </div>
+    {% endfor %}
+{% else %}
+<p>There are currently no orders.</p>
+{% endif %}
+
+<h2>Bar Inventory</h2>
+<div style="display: flex; flex-wrap: wrap;">
+    {% for item in bar_inventory %}
+    <div style="border: 1px solid black; margin-right: 1em; padding: 1em;">
+        <p>Product: {{ item.product.name }}</p>
+        <p>Quantity: {{ item.quantity }}</p>
+        <p>Price: {{ item.price }}</p>
+    </div>
+    {% empty %}
+    <p>No items in inventory</p>
+    {% endfor %}
+</div>
+{% endblock %}

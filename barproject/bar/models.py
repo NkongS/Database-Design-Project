@@ -6,6 +6,9 @@
 #   * Remove `managed = False` lines if you wish to allow Django to create, modify, and delete the table
 # Feel free to rename the models, but don't rename db_table values or field names.
 from django.db import models
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+from django.utils import timezone
 
 
 class BarInventory(models.Model):
@@ -32,7 +35,7 @@ class Bartables(models.Model):
     start_time = models.TimeField(blank=True, null=True)
     check_out_time = models.TimeField(blank=True, null=True)
     table_status = models.BooleanField(blank=True, null=True)
-    reservation = models.ForeignKey('Reservations', models.DO_NOTHING, blank=True, null=True)
+    reservation = models.ForeignKey('Reservations', models.SET_NULL, blank=True, null=True)
 
     class Meta:
         managed = False
@@ -120,7 +123,7 @@ class FeedbackReviews(models.Model):
 
 class Guesses(models.Model):
     branch = models.OneToOneField(Branches, models.DO_NOTHING, primary_key=True)
-    table = models.ForeignKey(Bartables, models.DO_NOTHING)
+    table = models.ForeignKey(Bartables, models.DO_NOTHING, blank=True, null=True)
     guess_first_name = models.CharField(max_length=30, blank=True, null=True)
     guess_last_name = models.CharField(max_length=30, blank=True, null=True)
     guess_band = models.CharField(max_length=30, blank=True, null=True)
@@ -176,6 +179,20 @@ class Reservations(models.Model):
     class Meta:
         managed = False
         db_table = 'reservations'
+    
+    def save(self, *args, **kwargs):
+        if self.pk is not None:  
+            orig = Reservations.objects.get(pk=self.pk)
+            if orig.table:  
+                orig.table.table_status = False 
+                orig.table.reservation = None  
+                orig.table.save()  
+        super().save(*args, **kwargs) 
+        if self.table: 
+            self.table.table_status = True 
+            self.table.reservation = self  
+            self.table.save()  
+
     def __str__(self):
         reservation_str = f"Reservation ID: {self.reservation_id}, Branch: {self.branch.branch_id}, Table: {self.table.table_id}, Membership: {(self.membership.membership_id if self.membership else 'None')}, Time: {self.reservation_time}, Guests: {self.number_of_guests}"
         return reservation_str
@@ -192,5 +209,34 @@ class SecurityLogs(models.Model):
         managed = False
         db_table = 'security_logs'
     def __str__(self):
-        log_str = f"Log ID: {self.log_id}, Branch: {self.branch}, Employee: {self.employee}, Time: {self.log_time}, Activity: {self.activity_log}"
+        log_str = f"Log ID: {self.log_id}, Branch: {self.branch.branch_id}, Employee: {self.employee.employee_id} {self.employee.first_name} {self.employee.last_name}, {self.employee.position.position_name}, Time: {self.log_time}, Activity: {self.activity_log}"
         return log_str
+    
+class Orders(models.Model):
+    order_id = models.AutoField(primary_key=True)
+    branch = models.ForeignKey(Branches, models.DO_NOTHING, blank=True, null=True)
+    item = models.ForeignKey(BarInventory, models.DO_NOTHING, blank=True, null=True)
+    table_id = models.ForeignKey(Bartables, models.DO_NOTHING, blank=True, null=True)
+    completed = models.BooleanField(default=False)
+    order_date = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Order {self.order_id}, {self.item.product_name}"
+
+class OrderProduct(models.Model):
+    branch = models.ForeignKey(Branches, models.DO_NOTHING, blank=True, null=True)
+    item = models.ForeignKey(BarInventory, models.DO_NOTHING, blank=True, null=True)
+    order = models.ForeignKey(Orders, on_delete=models.CASCADE)
+    quantity = models.IntegerField()
+
+    def __str__(self):
+        return f"Order {self.order.order_id}, Product {self.item.product_name}, Quantity {self.quantity}"
+
+@receiver(post_save, sender=Orders)
+def update_inventory_after_order_completed(sender, instance, **kwargs):
+    if instance.completed:
+        order_items = OrderProduct.objects.filter(order=instance)
+        for item in order_items:
+            product_in_inventory = BarInventory.objects.get(id=item.item.id)
+            product_in_inventory.quantity -= item.quantity
+            product_in_inventory.save()
