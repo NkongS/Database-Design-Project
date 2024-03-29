@@ -177,7 +177,7 @@ class Reservations(models.Model):
         managed = False
         db_table = 'reservations'
     def __str__(self):
-        reservation_str = f"Reservation ID: {self.reservation_id}, Branch: {self.branch}, Table: {self.table}, Membership: {self.membership}, Time: {self.reservation_time}, Guests: {self.number_of_guests}"
+        reservation_str = f"Reservation ID: {self.reservation_id}, Branch: {self.branch.branch_id}, Table: {self.table.table_id}, Membership: {(self.membership.membership_id if self.membership else 'None')}, Time: {self.reservation_time}, Guests: {self.number_of_guests}"
         return reservation_str
 
 
