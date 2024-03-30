@@ -5,7 +5,7 @@ from django.forms import formset_factory
 from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import redirect
 from django.http import JsonResponse
-from .forms import OrderForm, OrderItemFormSet, ReservationForm
+from .forms import OrderForm, OrderItemFormSet, ReservationForm, ReviewForm
 from django.core import serializers
 from datetime import datetime
 from .models import BarInventory
@@ -29,7 +29,20 @@ def home(request):
     current_month = now.strftime('%B')
     reviews = FeedbackReviews.objects.all()
 
-    return render(request, 'home.html', {'current_year': current_year, 'current_month': current_month, 'reviews': reviews})
+    if request.method == 'POST':
+        form = ReviewForm(request.POST)
+        if form.is_valid():
+            review = FeedbackReviews(
+                membership=form.cleaned_data['membership'],
+                rating=form.cleaned_data['rating'],
+                feedbacks=form.cleaned_data['feedbacks']
+            )
+            review.save()
+            return redirect('home')
+    else:
+        form = ReviewForm()
+
+    return render(request, 'home.html', {'current_year': current_year, 'current_month': current_month, 'reviews': reviews, 'form': form})
 
 def branch(request, branch_id):
     return render(request, 'branch.html', {'branch_id': branch_id})

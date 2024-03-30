@@ -1,6 +1,6 @@
 from django import forms
 from django.forms import formset_factory
-from .models import Orders, OrderProduct, BarInventory, Bartables, Branches, Membership
+from .models import Orders, OrderProduct, BarInventory, Bartables, Branches, Membership, FeedbackReviews
 from datetime import time
 
 class ProductNameChoiceField(forms.ModelChoiceField):
@@ -45,4 +45,8 @@ class ReservationForm(forms.Form):
     TIME_CHOICES = [(time(hour=i).strftime('%H:%M'), time(hour=i).strftime('%H:%M')) for i in range(0, 24)]
     reservation_time = forms.ChoiceField(choices=TIME_CHOICES, label='Reservation Time')
 
+class ReviewForm(forms.Form):
+    membership = forms.ModelChoiceField(queryset=Membership.objects.all(), required=False, empty_label="I'm not a member")
+    rating = forms.ChoiceField(choices=[(i, i) for i in range(1, 6)], label='Rating')
+    feedbacks = forms.CharField(widget=forms.Textarea, label='Feedback')
 
