@@ -156,11 +156,11 @@ def load_tables(request):
     return render(request, 'tables_dropdown_list_options.html', {'tables': tables})
 
 def apply_membership(request, branch_id):
-    form = MembershipApplicationForm() 
     if request.method == 'POST':
         form = MembershipApplicationForm(request.POST)
-    if form.is_valid():
-        return redirect('apply_membership', branch_id=branch_id)
+        if form.is_valid():
+            form.save()
+            return redirect('apply_membership', branch_id=branch_id)
     else:
         form = MembershipApplicationForm()
 

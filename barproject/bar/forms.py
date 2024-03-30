@@ -1,6 +1,6 @@
 from django import forms
 from django.forms import formset_factory
-from .models import Orders, OrderProduct, BarInventory, Bartables, Branches, Membership, FeedbackReviews
+from .models import Orders, OrderProduct, BarInventory, Bartables, Branches, Membership
 from datetime import time
 
 class ProductNameChoiceField(forms.ModelChoiceField):
@@ -54,4 +54,18 @@ class MembershipApplicationForm(forms.Form):
     first_name = forms.CharField(max_length=100)
     second_name = forms.CharField(max_length=100)
     contact_info = forms.CharField(max_length=10)
-    membership_status = forms.ChoiceField(choices=[('active', 'Active'), ('inactive', 'Inactive')])
+    membership_status = forms.ChoiceField(choices=[(True, 'Active'), (False, 'Inactive')])
+
+    def save(self):
+        data = self.cleaned_data
+        count = Membership.objects.count()
+        membership_id = f"M0{count + 1}"
+        membership = Membership(
+            membership_id=membership_id,
+            first_name=data['first_name'],
+            second_name=data['second_name'],
+            contact_info=int(data['contact_info']),  
+            membership_status=data['membership_status'] == 'True' 
+        )
+        membership.save()
+        return membership
