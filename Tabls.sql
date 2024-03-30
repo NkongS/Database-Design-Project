@@ -116,12 +116,14 @@ CREATE TABLE Orders (
     item_id         INTEGER REFERENCES Bar_Inventory(product_ID) ON UPDATE CASCADE ON DELETE CASCADE,
     table_id        VARCHAR(8) REFERENCES BarTables(table_ID) ON UPDATE CASCADE ON DELETE CASCADE,
     completed       BOOLEAN DEFAULT FALSE,
-    order_date      TIME DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE OrderProduct (
+    id SERIAL PRIMARY KEY,
     branch_ID       INTEGER REFERENCES Branches(branch_ID) ON UPDATE CASCADE ON DELETE CASCADE,
     item_id         INTEGER REFERENCES Bar_Inventory(product_ID) ON UPDATE CASCADE ON DELETE CASCADE,
     order_id        INTEGER REFERENCES Orders(order_id) ON UPDATE CASCADE ON DELETE CASCADE,
     quantity        INTEGER
 );
+
+ALTER TABLE employees ADD COLUMN schedule_id INTEGER, ADD CONSTRAINT employees_schedule_id_fkey FOREIGN KEY (schedule_id) REFERENCES employee_schedules (schedule_id);

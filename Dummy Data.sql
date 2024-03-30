@@ -12,17 +12,17 @@ INSERT INTO Employee_Position (position_ID, position_name, min_salary, max_salar
 ('POS005', 'Security Guard', 28000, 35000);
 
 -- Inserting Employees table data
-INSERT INTO Employees (employee_ID, position_ID, first_name, last_name, contact_info, email, salary, hire_date) VALUES
-('EMP001', 'POS001', 'John', 'Doe', 1234567890, 'john.doe@gmail.com', 60000, '2023-01-15'),
-('EMP002', 'POS002', 'Jane', 'Smith', 9876543210, 'jane.smith@gmail.com', 35000, '2023-02-20'),
-('EMP003', 'POS003', 'Michael', 'Johnson', 5551234567, 'michael.j@gmail.com', 28000, '2023-03-10'),
-('EMP004', 'POS004', 'Sarah', 'Johnson', 5559876543, 'sarah.j@gmail.com', 45000, '2023-04-05'),
-('EMP005', 'POS005', 'Robert', 'Williams', 4442223333, 'robert.w@gmail.com', 32000, '2023-05-10'),
-('EMP006', 'POS001', 'Jaden', 'Lee', 1122334455, 'jaden.lee@gmail.com', 70000, '2023-01-15'),
-('EMP007', 'POS002', 'Emily', 'Brown', 9988776655, 'emily.b@gmail.com', 38000, '2023-02-20'),
-('EMP008', 'POS003', 'David', 'Martinez', 5551234567, 'dav.mar@gmail.com', 26000, '2023-03-10'),
-('EMP009', 'POS004', 'Sophia', 'Garcia', 5559876543, 'gar.sop@gmail.com', 50000, '2023-04-05'),
-('EMP010', 'POS005', 'Ethan', 'Lopez', 4442223333, 'lop123@gmail.com', 30000, '2023-05-10');
+INSERT INTO Employees (employee_ID, position_ID, first_name, last_name, contact_info, email, salary, hire_date,schedule_id) VALUES
+('EMP001', 'POS001', 'John', 'Doe', 1234567890, 'john.doe@gmail.com', 60000, '2023-01-15', 11),
+('EMP002', 'POS002', 'Jane', 'Smith', 9876543210, 'jane.smith@gmail.com', 35000, '2023-02-20', 12),
+('EMP003', 'POS003', 'Michael', 'Johnson', 5551234567, 'michael.j@gmail.com', 28000, '2023-03-10', 13),
+('EMP004', 'POS004', 'Sarah', 'Johnson', 5559876543, 'sarah.j@gmail.com', 45000, '2023-04-05', 14),
+('EMP005', 'POS005', 'Robert', 'Williams', 4442223333, 'robert.w@gmail.com', 32000, '2023-05-10', 15),
+('EMP006', 'POS001', 'Jaden', 'Lee', 1122334455, 'jaden.lee@gmail.com', 70000, '2023-01-15', 16),
+('EMP007', 'POS002', 'Emily', 'Brown', 9988776655, 'emily.b@gmail.com', 38000, '2023-02-20', 17),
+('EMP008', 'POS003', 'David', 'Martinez', 5551234567, 'dav.mar@gmail.com', 26000, '2023-03-10', 18),
+('EMP009', 'POS004', 'Sophia', 'Garcia', 5559876543, 'gar.sop@gmail.com', 50000, '2023-04-05', 19),
+('EMP010', 'POS005', 'Ethan', 'Lopez', 4442223333, 'lop123@gmail.com', 30000, '2023-05-10', 20);
 
 
 -- Inserting Branches table data
@@ -102,6 +102,7 @@ INSERT INTO Feedback_Reviews (membership_id, rating, feedbacks) VALUES
 ('M01', 4, 'Friendly staff, but the wait time was long.'),
 (NULL, 2, 'Not satisfied with the service. Needs improvement.');
 
+
 -- Inserting Reservation table data
 INSERT INTO Reservations (branch_ID, table_ID, membership_id, reservation_time, number_of_guests) VALUES
 (1, 'B01T0001', 'M00', '17:00:00', 5),
@@ -113,3 +114,4 @@ UPDATE BarTables SET reservation_ID = 1 WHERE table_ID = 'B01T0001';
 UPDATE BarTables SET reservation_ID = 2 WHERE table_ID = 'B02T0001';
 UPDATE BarTables SET reservation_ID = 3 WHERE table_ID = 'B01T0002';
 UPDATE BarTables SET reservation_ID = 4 WHERE table_ID = 'B02T0002';
+
