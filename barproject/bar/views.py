@@ -125,7 +125,7 @@ def reservation(request):
     if request.method == 'POST':
         form = ReservationForm(request.POST)
         if form.is_valid():
-            branch = form.cleaned_data['branch']
+            branch_id = form.cleaned_data['branch'].branch_id
             table = form.cleaned_data['table']
             membership = form.cleaned_data['membership']
             number_of_guests = form.cleaned_data['number_of_guests']
@@ -133,18 +133,18 @@ def reservation(request):
 
             if table:
                 reservation = Reservations.objects.create(
-                    branch=branch,
+                    branch=form.cleaned_data['branch'],
                     table=table,
                     membership=membership,
                     reservation_time=reservation_time,
                     number_of_guests=number_of_guests
-                )
+            )
 
                 table.table_status = True
                 table.start_time = reservation_time
                 table.save()
 
-                return redirect('reserve_success', branch_id=branch.id, table_id=table.id)
+                return redirect('reservation')
     else:
         form = ReservationForm()
 
