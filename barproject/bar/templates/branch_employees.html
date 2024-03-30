@@ -1,9 +1,8 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div style="display: flex; justify-content: center; align-items: center; height: 100vh; flex-direction: column;">
+<div style="display: flex; justify-content: center; align-items: center; height: 70vh; flex-direction: column;">
     <a href="{% url 'orders' branch_id=branch_id %}" class="btn btn-primary" style="font-size: 2em; margin: 1em; padding: 1em;">Orders</a>
     <a href="{% url 'management' branch_id=branch_id %}" class="btn btn-primary" style="font-size: 2em; margin: 1em; padding: 1em;">Management</a>
-    {# <a href="{% url 'employee_option3' branch_id=branch_id %}" class="btn btn-primary" style="font-size: 2em; margin: 1em; padding: 1em;">Option 3</a> #}
-    {# <a href="{% url 'employee_option4' branch_id=branch_id %}" class="btn btn-primary" style="font-size: 2em; margin: 1em; padding: 1em;">Option 4</a> #}
+    <a href="{% url 'apply_membership' branch_id=branch_id %}" class="btn btn-primary" style="font-size: 2em; margin: 1em; padding: 1em;">Apply Membership</a> 
 {% endblock %}

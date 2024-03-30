@@ -23,6 +23,11 @@
             <a class="nav-link" href="{% url 'branch' branch_id=2 %}">Branch2</a>
           </li>
         </ul>
+        {% if branch_name %}
+          <span class="navbar-text ml-auto text-white font-weight-bold" style="font-size: 1.5em;">
+            {{ branch_name }}
+          </span>
+        {% endif %}
         <ul class="navbar-nav ml-auto">
           <li class="nav-item">
             <a class="btn btn-primary" href="{% url 'reservation' %}">Make a Reservation</a>
@@ -30,6 +35,9 @@
         </ul>
       </div>
     </nav>
+    {% if request.path != '/' %}
+    <button onclick="window.history.back();" class="btn btn-secondary" style="margin: 20px;">Back</button>
+    {% endif %}
     <div class="container">{% block content %} {% endblock %}</div>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js" ></script>

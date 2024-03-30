@@ -21,6 +21,7 @@ class BarInventory(models.Model):
     class Meta:
         managed = False
         db_table = 'bar_inventory'
+        verbose_name_plural = "Bar Inventories"
     def __str__(self):
         if self.branch:
             return f"Branch: {self.branch.branch_id}, {self.product_name}, Price: {self.price}"
@@ -40,9 +41,9 @@ class Bartables(models.Model):
     class Meta:
         managed = False
         db_table = 'bartables'
+        verbose_name_plural = "Bar Tables"
     def __str__(self):
-        table_str = f"Table ID: {self.table_id}, Status: {self.table_status}"
-        return table_str
+        return self.table_id
 
 
 class Branches(models.Model):
@@ -54,6 +55,7 @@ class Branches(models.Model):
     class Meta:
         managed = False
         db_table = 'branches'
+        verbose_name_plural = "Branches"
     def __str__(self):
         branch_str = f"Branch: {self.branch_id}, {self.branch_name}, {self.location}"
         return branch_str
@@ -68,6 +70,7 @@ class EmployeePosition(models.Model):
     class Meta:
         managed = False
         db_table = 'employee_position'
+        verbose_name_plural = "Employee Positions"
     def __str__(self):
         position_str = f"Position ID: {self.position_id}, {self.position_name}, Salary: {self.min_salary} - {self.max_salary}"
         return position_str
@@ -83,14 +86,16 @@ class EmployeeSchedules(models.Model):
     class Meta:
         managed = False
         db_table = 'employee_schedules'
+        verbose_name_plural = "Employee Schedules"
     def __str__(self):
-        schedule_str = f"Schedule ID: {self.schedule_id}, Branch: {self.branch}, Employee: {self.employee}, Shift: {self.shift_start} - {self.shift_end}"
+        schedule_str = f"Schedule ID: {self.schedule_id}, Employee: {self.employee.employee_id}, Shift: {self.shift_start} - {self.shift_end}"
         return schedule_str
 
 
 class Employees(models.Model):
     employee_id = models.CharField(primary_key=True, max_length=10)
     position = models.ForeignKey(EmployeePosition, models.DO_NOTHING, blank=True, null=True)
+    schedule = models.ForeignKey(EmployeeSchedules, models.DO_NOTHING, blank=True, null=True)
     first_name = models.CharField(max_length=30, blank=True, null=True)
     last_name = models.CharField(max_length=30, blank=True, null=True)
     contact_info = models.DecimalField(max_digits=12, decimal_places=0, blank=True, null=True)
@@ -102,6 +107,7 @@ class Employees(models.Model):
     class Meta:
         managed = False
         db_table = 'employees'
+        verbose_name_plural = "Employees"
     def __str__(self):
         employee_str = f"Branch: {self.branch.branch_id}, Employee ID: {self.employee_id}, {self.first_name} {self.last_name}, {self.position.position_name}, {self.salary}"
         return employee_str
@@ -116,6 +122,7 @@ class FeedbackReviews(models.Model):
     class Meta:
         managed = False
         db_table = 'feedback_reviews'
+        verbose_name_plural = "Feedback Reviews"
     def __str__(self):
         review_str = f"Review ID: {self.review_id}, Membership: {(self.membership.membership_id if self.membership else 'None')}, Rating: {self.rating}"
         return review_str
@@ -132,6 +139,7 @@ class Guesses(models.Model):
         managed = False
         db_table = 'guesses'
         unique_together = (('branch', 'table'),)
+        verbose_name_plural = "Guesses"
     def __str__(self):
         guess_str = f"Branch: {self.branch.branch_id}, Table: {self.table.table_id}, {self.guess_first_name} {self.guess_last_name}, Band: {self.guess_band}"
         return guess_str
@@ -149,6 +157,7 @@ class Locations(models.Model):
     class Meta:
         managed = False
         db_table = 'locations'
+        verbose_name_plural = "Locations"
     def __str__(self):
         location_str = f"Location ID: {self.location_id}, {self.city_name}, {self.country_name}"
         return location_str
@@ -163,6 +172,7 @@ class Membership(models.Model):
     class Meta:
         managed = False
         db_table = 'membership'
+        verbose_name_plural = "Memberships"
     def __str__(self):
         membership_str = f"Membership ID: {self.membership_id}, {self.first_name} {self.second_name}, Status: {self.membership_status}"
         return membership_str
@@ -179,6 +189,7 @@ class Reservations(models.Model):
     class Meta:
         managed = False
         db_table = 'reservations'
+        verbose_name_plural = "Reservations"
     
     def save(self, *args, **kwargs):
         if self.pk is not None:  
@@ -208,6 +219,7 @@ class SecurityLogs(models.Model):
     class Meta:
         managed = False
         db_table = 'security_logs'
+        verbose_name_plural = "Security Logs"
     def __str__(self):
         log_str = f"Log ID: {self.log_id}, Branch: {self.branch.branch_id}, Employee: {self.employee.employee_id} {self.employee.first_name} {self.employee.last_name}, {self.employee.position.position_name}, Time: {self.log_time}, Activity: {self.activity_log}"
         return log_str
@@ -216,23 +228,35 @@ class Orders(models.Model):
     order_id = models.AutoField(primary_key=True)
     branch = models.ForeignKey(Branches, models.DO_NOTHING, blank=True, null=True)
     item = models.ForeignKey(BarInventory, models.DO_NOTHING, blank=True, null=True)
-    table_id = models.ForeignKey(Bartables, models.DO_NOTHING, blank=True, null=True)
+    table = models.ForeignKey(Bartables, models.DO_NOTHING, blank=True, null=True)
     completed = models.BooleanField(default=False)
-    order_date = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        managed = False
+        db_table = 'orders'
+        verbose_name_plural = "Orders"
 
     def __str__(self):
         product_name = self.item.product_name if self.item else 'No product'
         return f"Order {self.order_id}, {product_name}"
 
 class OrderProduct(models.Model):
+    id = models.AutoField(primary_key=True)
     branch = models.ForeignKey(Branches, models.DO_NOTHING, blank=True, null=True)
     item = models.ForeignKey(BarInventory, models.DO_NOTHING, blank=True, null=True)
     order = models.ForeignKey(Orders, on_delete=models.CASCADE)
     quantity = models.IntegerField()
 
+    class Meta:
+        managed = False
+        db_table = 'orderproduct'
+        unique_together = (('item', 'order'),)
+        verbose_name_plural = "Order Products"
+
     def __str__(self):
         product_name = self.item.product_name if self.item else 'No product'
-        return f"Order {self.order.order_id}, Product {product_name}, Quantity {self.quantity}"
+        order_id = self.order.order_id if self.order else 'No order'
+        return f"Order {order_id}, Product {product_name}, Quantity {self.quantity}"
     
     def total_price(self):
         return self.quantity * self.item.price

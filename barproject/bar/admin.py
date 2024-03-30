@@ -12,7 +12,7 @@ from .models import Reservations
 from .models import SecurityLogs
 from .models import Orders
 from .models import OrderProduct
-
+from .models import EmployeeSchedules
 
 # Register your models here.
 admin.site.register(Locations)
@@ -28,4 +28,5 @@ admin.site.register(Reservations)
 admin.site.register(SecurityLogs)
 admin.site.register(Orders)
 admin.site.register(OrderProduct)
+admin.site.register(EmployeeSchedules)
 

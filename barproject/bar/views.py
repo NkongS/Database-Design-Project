@@ -1,18 +1,13 @@
 from django.shortcuts import render
-from django.shortcuts import get_object_or_404, redirect
-from django.views.decorators.http import require_POST
-from django.forms import formset_factory
+from django.shortcuts import redirect
 from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import redirect
 from django.http import JsonResponse
-from .forms import OrderForm, OrderItemFormSet, ReservationForm, ReviewForm
-from django.core import serializers
+from .forms import OrderForm, OrderItemFormSet, ReservationForm, ReviewForm, MembershipApplicationForm
 from datetime import datetime
 from .models import BarInventory
-from .models import Locations
 from .models import Bartables
 from .models import Branches
-from .models import EmployeePosition
 from .models import Employees
 from .models import FeedbackReviews
 from .models import Guesses
@@ -45,7 +40,8 @@ def home(request):
     return render(request, 'home.html', {'current_year': current_year, 'current_month': current_month, 'reviews': reviews, 'form': form})
 
 def branch(request, branch_id):
-    return render(request, 'branch.html', {'branch_id': branch_id})
+    branch = Branches.objects.get(branch_id=branch_id)
+    return render(request, 'branch.html', {'branch_id': branch_id, 'branch_name': branch.branch_name})
 
 def branch_employees(request, branch_id):
     return render(request, 'branch_employees.html', {'branch_id': branch_id})
@@ -80,7 +76,7 @@ def order_success(request, branch_id, table_id):
 
 def table_orders(request, branch_id, table_id, from_employees=False):
     orders = Orders.objects.filter(branch_id=branch_id, table_id=table_id).prefetch_related('orderproduct_set')
-    total_bill = sum(order_product.total_price() for order in orders for order_product in order.orderproduct_set.all())
+    total_bill = sum(orderproduct.total_price() for order in orders for orderproduct in order.orderproduct_set.all())
     return render(request, 'table_orders.html', {'orders': orders, 'table_id': table_id, 'total_bill': total_bill, 'from_employees': from_employees})
 
 def view_orders(request, branch_id):
@@ -102,6 +98,7 @@ def management(request, branch_id):
     guests = Guesses.objects.filter(branch=branch_id)
     memberships = Membership.objects.all()
     security_logs = SecurityLogs.objects.filter(branch=branch_id)
+    reservations = Reservations.objects.filter(branch=branch_id)
 
     context = {
         'branches': branches,
@@ -109,6 +106,7 @@ def management(request, branch_id):
         'guests': guests,
         'memberships': memberships,
         'security_logs': security_logs,
+        'reservations': reservations,
     }
 
     return render(request, 'management.html', context)
@@ -156,4 +154,15 @@ def load_tables(request):
     branch_id = request.GET.get('branch')
     tables = Bartables.objects.filter(branch_id=branch_id, table_status=False).order_by('table_id')
     return render(request, 'tables_dropdown_list_options.html', {'tables': tables})
+
+def apply_membership(request, branch_id):
+    form = MembershipApplicationForm() 
+    if request.method == 'POST':
+        form = MembershipApplicationForm(request.POST)
+    if form.is_valid():
+        return redirect('apply_membership', branch_id=branch_id)
+    else:
+        form = MembershipApplicationForm()
+
+    return render(request, 'apply_membership.html', {'form': form, 'branch_id': branch_id})
 

@@ -62,10 +62,10 @@
     {% for order in orders %}
     <div class="order">
         <h2>Order {{ order.order_id }}</h2>
-        {% for order_product in order.orderproduct_set.all %}
-        <p>Item: {{ order.item.product_name }}</p>
-        <p>Quantity: {{ order_product.quantity }}</p>
-        <p>Price: ${{ order_product.total_price }}</p>
+        {% for orderproduct in order.orderproduct_set.all %}
+        <p>Item: {{ orderproduct.item.product_name }}</p>
+        <p>Quantity: {{ orderproduct.quantity }}</p>
+        <p>Price: ${{ orderproduct.total_price }}</p>
         <p>Status: {% if order.completed %}Completed{% else %}Pending{% endif %}</p>
         {% endfor %}
         {% if from_employees and not order.completed %}

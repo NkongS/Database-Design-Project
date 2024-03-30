@@ -50,3 +50,8 @@ class ReviewForm(forms.Form):
     rating = forms.ChoiceField(choices=[(i, i) for i in range(1, 6)], label='Rating')
     feedbacks = forms.CharField(widget=forms.Textarea, label='Feedback')
 
+class MembershipApplicationForm(forms.Form):
+    first_name = forms.CharField(max_length=100)
+    second_name = forms.CharField(max_length=100)
+    contact_info = forms.CharField(max_length=10)
+    membership_status = forms.ChoiceField(choices=[('active', 'Active'), ('inactive', 'Inactive')])

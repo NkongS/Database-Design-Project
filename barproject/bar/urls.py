@@ -1,5 +1,4 @@
 from django.urls import path
-from django.contrib.auth import views as auth_views
 from . import views
 
 urlpatterns = [
@@ -16,4 +15,5 @@ urlpatterns = [
     path('branch/<int:branch_id>/employees/management/', views.management, name='management'),
     path('reservation/', views.reservation, name='reservation'),
     path('ajax/load-tables/', views.load_tables, name='ajax_load_tables'),
+    path('branch/<int:branch_id>/employees/apply_membership', views.apply_membership, name='apply_membership'),
 ]

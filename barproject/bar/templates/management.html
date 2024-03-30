@@ -15,8 +15,21 @@
 </div>
 
 {% for branch in branches %}
-    Name: {{ branch.branch_name }}
+    <h6>{{ branch.branch_name }}</h6>
     Locations: {{ branch.location.address_no }}, {{ branch.location.street_name }}, {{ branch.location.city_name }}, {{ branch.location.province_name }}, {{ branch.location.postal_code }}, {{ branch.location.country_name }}
+{% endfor %}
+<hr>
+
+<h2>Reservations</h2>
+{% for reservation in reservations %}
+<div style="display: flex; flex-direction: row; justify-content: space-between; border: 1px solid #000; padding: 10px; margin-bottom: 10px;">
+    <div>ID: {{ reservation.reservation_id }}</div>
+    <div>Table: {{ reservation.table.table_id }}</div>
+    <div>Membership: {% if reservation.membership %}{{ reservation.membership.membership_id }}{% else %}No{% endif %}</div>
+    <div>Guest: {{ reservation.number_of_guests }}</div>
+    <div>Time: {{ reservation.reservation_time }}</div>
+
+</div>
 {% endfor %}
 <hr>
 
@@ -26,9 +39,10 @@
     <div>ID: {{ employee.employee_id }}</div>
     <div>Name: {{ employee.first_name }} {{ employee.last_name }}</div>
     <div>Contact: {{ employee.contact_info }}</div>
-    <div>Email: {{ employee.email }}</div>
-    <div>Salary: {{ employee.salary }}</div>
+    <div>Position: {{ employee.position.position_name }}</div>
+    <div>Salary: ${{ employee.salary }}</div>
     <div>Hire Date: {{ employee.hire_date }}</div>
+    <div>Schedule: {{ employee.schedule.shift_start }} - {{ employee.schedule.shift_end }}</div>
 </div>
 {% endfor %}
 <hr>
