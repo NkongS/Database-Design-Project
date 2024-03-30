@@ -242,6 +242,6 @@ def update_inventory_after_order_completed(sender, instance, **kwargs):
     if instance.completed:
         order_items = OrderProduct.objects.filter(order=instance)
         for item in order_items:
-            product_in_inventory = BarInventory.objects.get(id=item.item.id)
+            product_in_inventory = BarInventory.objects.get(product_id=item.item.product_id)
             product_in_inventory.quantity -= item.quantity
             product_in_inventory.save()

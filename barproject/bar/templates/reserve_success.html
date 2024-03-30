@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <div style="display: flex; justify-content: center; align-items: center; height: 100vh; font-size: 2em; font-weight: bold;">
+        RESERVATION SUCCESS
+    </div>
+    <script>
+        setTimeout(function(){
+            window.location.href = '/';
+        }, 3000);
+    </script>
+{% endblock %}

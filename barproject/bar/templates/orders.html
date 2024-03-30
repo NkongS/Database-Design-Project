@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block content %}
+<style>
+    .square-btn {
+        width: 100px;
+        height: 100px;
+        padding: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    </style>
+    
+    <div class="tables text-center mt-5">
+        <h2>View Orders</h2>
+        <div class="row justify-content-center">
+            {% for table in tables %}
+            <div class="col-auto mx-2">
+                <a href="{% url 'employee_table_orders' branch_id=table.branch_id table_id=table.table_id %}" class="btn btn-primary btn-lg my-2 square-btn">{{ table.table_id }}</a>
+            </div>
+            {% empty %}
+            <p>No tables available.</p>
+            {% endfor %}
+        </div>
+    </div>
+
+{% endblock %}
